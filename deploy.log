@@ -1,0 +1,746 @@
+#deploy.log
+
+kvn@student2:~/netology$ cd terraform1
+kvn@student2:~/netology/terraform1$ ./deploy.sh
+Initializing the backend...
+Initializing provider plugins...
+- Finding yandex-cloud/yandex versions matching "~> 0.140"...
+- Finding kreuzwerker/docker versions matching "~> 3.0"...
+- Finding hashicorp/random versions matching "~> 3.6"...
+- Finding hashicorp/local versions matching "~> 2.5"...
+- Installing hashicorp/random v3.9.0...
+- Installed hashicorp/random v3.9.0 (unauthenticated)
+- Installing hashicorp/local v2.9.0...
+- Installed hashicorp/local v2.9.0 (unauthenticated)
+- Installing yandex-cloud/yandex v0.206.0...
+- Installed yandex-cloud/yandex v0.206.0 (unauthenticated)
+- Installing kreuzwerker/docker v3.9.0...
+- Installed kreuzwerker/docker v3.9.0 (unauthenticated)
+Terraform has created a lock file .terraform.lock.hcl to record the provider
+selections it made above. Include this file in your version control repository
+so that Terraform can guarantee to make the same selections by default when
+you run "terraform init" in the future.
+
+╷
+│ Warning: Incomplete lock file information for providers
+│ 
+│ Due to your customized provider installation methods, Terraform was forced to calculate lock file checksums locally for the following
+│ providers:
+│   - hashicorp/local
+│   - hashicorp/random
+│   - kreuzwerker/docker
+│   - yandex-cloud/yandex
+│ 
+│ The current .terraform.lock.hcl file only includes checksums for linux_amd64, so Terraform running on another platform will fail to
+│ install these providers.
+│ 
+│ To calculate additional checksums for another platform, run:
+│   terraform providers lock -platform=linux_amd64
+│ (where linux_amd64 is the platform to generate)
+╵
+Terraform has been successfully initialized!
+
+You may now begin working with Terraform. Try running "terraform plan" to see
+any changes that are required for your infrastructure. All Terraform commands
+should now work.
+
+If you ever set or change modules or backend configuration for Terraform,
+rerun this command to reinitialize your working directory. If you forget, other
+commands will detect it and remind you to do so if necessary.
+data.yandex_compute_image.ubuntu_2204_lts: Reading...
+yandex_vpc_gateway.nat_gateway: Refreshing state... [id=enpkq17otonodkvj6j37]
+yandex_vpc_network.develop: Refreshing state... [id=enp8rvmtg5dq0su05pip]
+data.yandex_compute_image.ubuntu_2204_lts: Read complete after 3s [id=fd8hrphlcsmi293sjc74]
+yandex_vpc_route_table.rt: Refreshing state... [id=enpuma37vb437i0sm2eu]
+yandex_vpc_security_group.ha_cluster: Refreshing state... [id=enp35og1tou89p5bocmu]
+yandex_vpc_subnet.develop_a: Refreshing state... [id=e9beqgo7qg2iekrfbagh]
+yandex_compute_instance.server1: Refreshing state... [id=fhmh20047q7t7bggqs8q]
+local_file.inventory: Refreshing state... [id=ad1166e29017685e4261358f4d4f5a597345168a]
+
+Terraform used the selected providers to generate the following execution plan. Resource actions are indicated with the following symbols:
+  ~ update in-place
+
+Terraform will perform the following actions:
+
+  # yandex_vpc_security_group.ha_cluster will be updated in-place
+  ~ resource "yandex_vpc_security_group" "ha_cluster" {
+        id          = "enp35og1tou89p5bocmu"
+        name        = "ha-cluster-kvn"
+        # (6 unchanged attributes hidden)
+
+      - ingress {
+          - description       = "SSH" -> null
+          - from_port         = -1 -> null
+          - id                = "enpgr24pul3jbjk0kd2p" -> null
+          - labels            = {} -> null
+          - port              = 22 -> null
+          - protocol          = "TCP" -> null
+          - to_port           = -1 -> null
+          - v4_cidr_blocks    = [
+              - "0.0.0.0/0",
+            ] -> null
+          - v6_cidr_blocks    = [] -> null
+            # (2 unchanged attributes hidden)
+        }
+      + ingress {
+          + description       = "SSH"
+          + from_port         = 22
+          + id                = (known after apply)
+          + labels            = (known after apply)
+          + port              = -1
+          + protocol          = "TCP"
+          + to_port           = 22
+          + v4_cidr_blocks    = [
+              + "0.0.0.0/0",
+            ]
+          + v6_cidr_blocks    = []
+            # (2 unchanged attributes hidden)
+        }
+
+        # (1 unchanged block hidden)
+    }
+
+Plan: 0 to add, 1 to change, 0 to destroy.
+yandex_vpc_security_group.ha_cluster: Modifying... [id=enp35og1tou89p5bocmu]
+yandex_vpc_security_group.ha_cluster: Modifications complete after 3s [id=enp35og1tou89p5bocmu]
+╷
+│ Warning: Resource targeting is in effect
+│ 
+│ You are creating a plan with the -target option, which means that the result of this plan may not represent all of the changes requested
+│ by the current configuration.
+│ 
+│ The -target option is not for routine use, and is provided only for exceptional situations such as recovering from errors or mistakes, or
+│ when Terraform specifically suggests to use it as part of an error message.
+╵
+╷
+│ Warning: Applied changes may be incomplete
+│ 
+│ The plan was created with the -target option in effect, so some changes requested in the configuration may have been ignored and the
+│ output values may not be fully updated. Run the following command to verify that no other changes are pending:
+│     terraform plan
+│ 
+│ Note that the -target option is not suitable for routine use, and is provided only for exceptional situations such as recovering from
+│ errors or mistakes, or when Terraform specifically suggests to use it as part of an error message.
+╵
+╷
+│ Warning: Cannot connect to YC tool initialization service. Network connectivity to the service is required for provider version control.
+│ 
+│ 
+│   with provider["registry.terraform.io/yandex-cloud/yandex"],
+│   on providers.tf line 25, in provider "yandex":
+│   25: provider "yandex" {
+│ 
+╵
+
+Apply complete! Resources: 0 added, 1 changed, 0 destroyed.
+
+Outputs:
+
+external_ip = "93.77.177.16"
+mysql_root_password = <sensitive>
+mysql_user_password = <sensitive>
+security_group_id = "enp35og1tou89p5bocmu"
+subnet_a = "e9beqgo7qg2iekrfbagh"
+Waiting for SSH on 93.77.177.16:22 ...
+SSH is reachable on 93.77.177.16:22
+
+PLAY [Install Docker and deploy project] ****************************************************************************************************
+
+TASK [Wait for SSH] *************************************************************************************************************************
+ok: [vm1]
+
+TASK [Gather facts] *************************************************************************************************************************
+ok: [vm1]
+
+TASK [Install base packages] ****************************************************************************************************************
+ok: [vm1]
+
+TASK [Create apt keyrings directory] ********************************************************************************************************
+ok: [vm1]
+
+TASK [Download Docker GPG key] **************************************************************************************************************
+ok: [vm1]
+
+TASK [Add Docker repository] ****************************************************************************************************************
+ok: [vm1]
+
+TASK [Install Docker packages] **************************************************************************************************************
+ok: [vm1]
+
+TASK [Add yc-user to docker group] **********************************************************************************************************
+ok: [vm1]
+
+TASK [Enable Docker service] ****************************************************************************************************************
+ok: [vm1]
+
+PLAY RECAP **********************************************************************************************************************************
+vm1                        : ok=9    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+
+random_password.mysql_root_password: Refreshing state... [id=none]
+random_password.mysql_user_password: Refreshing state... [id=none]
+data.yandex_compute_image.ubuntu_2204_lts: Reading...
+yandex_vpc_network.develop: Refreshing state... [id=enp8rvmtg5dq0su05pip]
+yandex_vpc_gateway.nat_gateway: Refreshing state... [id=enpkq17otonodkvj6j37]
+data.yandex_compute_image.ubuntu_2204_lts: Read complete after 2s [id=fd8hrphlcsmi293sjc74]
+yandex_vpc_route_table.rt: Refreshing state... [id=enpuma37vb437i0sm2eu]
+yandex_vpc_security_group.ha_cluster: Refreshing state... [id=enp35og1tou89p5bocmu]
+yandex_vpc_subnet.develop_a: Refreshing state... [id=e9beqgo7qg2iekrfbagh]
+yandex_compute_instance.server1: Refreshing state... [id=fhmh20047q7t7bggqs8q]
+local_file.inventory: Refreshing state... [id=ad1166e29017685e4261358f4d4f5a597345168a]
+docker_image.mysql: Refreshing state... [id=sha256:c36050afdca850f23cef85703f84c7531a5ae155a11b5ee1c60acb09937c4084mysql:8]
+
+Terraform used the selected providers to generate the following execution plan. Resource actions are indicated with the following symbols:
+  + create
+  ~ update in-place
+
+Terraform will perform the following actions:
+
+  # docker_container.mysql will be created
+  + resource "docker_container" "mysql" {
+      + attach                                      = false
+      + bridge                                      = (known after apply)
+      + command                                     = (known after apply)
+      + container_logs                              = (known after apply)
+      + container_read_refresh_timeout_milliseconds = 15000
+      + entrypoint                                  = (known after apply)
+      + env                                         = (sensitive value)
+      + exit_code                                   = (known after apply)
+      + hostname                                    = (known after apply)
+      + id                                          = (known after apply)
+      + image                                       = "sha256:c36050afdca850f23cef85703f84c7531a5ae155a11b5ee1c60acb09937c4084"
+      + init                                        = (known after apply)
+      + ipc_mode                                    = (known after apply)
+      + log_driver                                  = (known after apply)
+      + logs                                        = false
+      + memory_reservation                          = 0
+      + must_run                                    = true
+      + name                                        = (known after apply)
+      + network_data                                = (known after apply)
+      + network_mode                                = "bridge"
+      + read_only                                   = false
+      + remove_volumes                              = true
+      + restart                                     = "unless-stopped"
+      + rm                                          = false
+      + runtime                                     = (known after apply)
+      + security_opts                               = (known after apply)
+      + shm_size                                    = (known after apply)
+      + start                                       = true
+      + stdin_open                                  = false
+      + stop_signal                                 = (known after apply)
+      + stop_timeout                                = (known after apply)
+      + tty                                         = false
+      + wait                                        = false
+      + wait_timeout                                = 60
+
+      + healthcheck (known after apply)
+
+      + labels (known after apply)
+
+      + ports {
+          + external = 3306
+          + internal = 3306
+          + ip       = "127.0.0.1"
+          + protocol = "tcp"
+        }
+    }
+
+  # random_string.container_suffix will be created
+  + resource "random_string" "container_suffix" {
+      + id          = (known after apply)
+      + length      = 8
+      + lower       = true
+      + min_lower   = 0
+      + min_numeric = 0
+      + min_special = 0
+      + min_upper   = 0
+      + number      = true
+      + numeric     = true
+      + result      = (known after apply)
+      + special     = false
+      + upper       = false
+    }
+
+  # yandex_vpc_security_group.ha_cluster will be updated in-place
+  ~ resource "yandex_vpc_security_group" "ha_cluster" {
+        id          = "enp35og1tou89p5bocmu"
+        name        = "ha-cluster-kvn"
+        # (6 unchanged attributes hidden)
+
+      - ingress {
+          - description       = "SSH" -> null
+          - from_port         = -1 -> null
+          - id                = "enpqms6an9fj2ta27pml" -> null
+          - labels            = {} -> null
+          - port              = 22 -> null
+          - protocol          = "TCP" -> null
+          - to_port           = -1 -> null
+          - v4_cidr_blocks    = [
+              - "0.0.0.0/0",
+            ] -> null
+          - v6_cidr_blocks    = [] -> null
+            # (2 unchanged attributes hidden)
+        }
+      + ingress {
+          + description       = "SSH"
+          + from_port         = 22
+          + id                = (known after apply)
+          + labels            = (known after apply)
+          + port              = -1
+          + protocol          = "TCP"
+          + to_port           = 22
+          + v4_cidr_blocks    = [
+              + "0.0.0.0/0",
+            ]
+          + v6_cidr_blocks    = []
+            # (2 unchanged attributes hidden)
+        }
+
+        # (1 unchanged block hidden)
+    }
+
+Plan: 2 to add, 1 to change, 0 to destroy.
+
+Changes to Outputs:
+  + mysql_container_name = (sensitive value)
+random_string.container_suffix: Creating...
+random_string.container_suffix: Creation complete after 0s [id=t49aipmz]
+yandex_vpc_security_group.ha_cluster: Modifying... [id=enp35og1tou89p5bocmu]
+yandex_vpc_security_group.ha_cluster: Modifications complete after 2s [id=enp35og1tou89p5bocmu]
+docker_container.mysql: Creating...
+docker_container.mysql: Creation complete after 4s [id=1a03969b03a57b7ff0b8107c293afa66d017deb434fb005eb700919aa66d8087]
+
+Apply complete! Resources: 2 added, 1 changed, 0 destroyed.
+
+Outputs:
+
+external_ip = "93.77.177.16"
+mysql_container_name = <sensitive>
+mysql_root_password = <sensitive>
+mysql_user_password = <sensitive>
+security_group_id = "enp35og1tou89p5bocmu"
+subnet_a = "e9beqgo7qg2iekrfbagh"
+kvn@student2:~/netology/terraform1$ cd terraform
+kvn@student2:~/netology/terraform1/terraform$ terraform destroy
+random_password.mysql_root_password: Refreshing state... [id=none]
+random_password.mysql_user_password: Refreshing state... [id=none]
+random_string.container_suffix: Refreshing state... [id=t49aipmz]
+yandex_vpc_gateway.nat_gateway: Refreshing state... [id=enpkq17otonodkvj6j37]
+data.yandex_compute_image.ubuntu_2204_lts: Reading...
+yandex_vpc_network.develop: Refreshing state... [id=enp8rvmtg5dq0su05pip]
+data.yandex_compute_image.ubuntu_2204_lts: Read complete after 1s [id=fd8hrphlcsmi293sjc74]
+yandex_vpc_route_table.rt: Refreshing state... [id=enpuma37vb437i0sm2eu]
+yandex_vpc_security_group.ha_cluster: Refreshing state... [id=enp35og1tou89p5bocmu]
+yandex_vpc_subnet.develop_a: Refreshing state... [id=e9beqgo7qg2iekrfbagh]
+yandex_compute_instance.server1: Refreshing state... [id=fhmh20047q7t7bggqs8q]
+local_file.inventory: Refreshing state... [id=ad1166e29017685e4261358f4d4f5a597345168a]
+docker_image.mysql: Refreshing state... [id=sha256:c36050afdca850f23cef85703f84c7531a5ae155a11b5ee1c60acb09937c4084mysql:8]
+docker_container.mysql: Refreshing state... [id=1a03969b03a57b7ff0b8107c293afa66d017deb434fb005eb700919aa66d8087]
+
+Terraform used the selected providers to generate the following execution plan. Resource actions are indicated with the following symbols:
+  - destroy
+
+Terraform will perform the following actions:
+
+  # docker_container.mysql will be destroyed
+  - resource "docker_container" "mysql" {
+      - attach                                      = false -> null
+      - command                                     = [
+          - "mysqld",
+        ] -> null
+      - container_read_refresh_timeout_milliseconds = 15000 -> null
+      - cpu_shares                                  = 0 -> null
+      - dns                                         = [] -> null
+      - dns_opts                                    = [] -> null
+      - dns_search                                  = [] -> null
+      - entrypoint                                  = [
+          - "docker-entrypoint.sh",
+        ] -> null
+      - env                                         = (sensitive value) -> null
+      - group_add                                   = [] -> null
+      - hostname                                    = "1a03969b03a5" -> null
+      - id                                          = "1a03969b03a57b7ff0b8107c293afa66d017deb434fb005eb700919aa66d8087" -> null
+      - image                                       = "sha256:c36050afdca850f23cef85703f84c7531a5ae155a11b5ee1c60acb09937c4084" -> null
+      - init                                        = false -> null
+      - ipc_mode                                    = "private" -> null
+      - log_driver                                  = "json-file" -> null
+      - log_opts                                    = {} -> null
+      - logs                                        = false -> null
+      - max_retry_count                             = 0 -> null
+      - memory                                      = 0 -> null
+      - memory_reservation                          = 0 -> null
+      - memory_swap                                 = 0 -> null
+      - must_run                                    = true -> null
+      - name                                        = "example_t49aipmz" -> null
+      - network_data                                = [
+          - {
+              - gateway                   = "172.17.0.1"
+              - global_ipv6_prefix_length = 0
+              - ip_address                = "172.17.0.2"
+              - ip_prefix_length          = 16
+              - mac_address               = "2a:0d:7a:32:8e:15"
+              - network_name              = "bridge"
+                # (2 unchanged attributes hidden)
+            },
+        ] -> null
+      - network_mode                                = "bridge" -> null
+      - privileged                                  = false -> null
+      - publish_all_ports                           = false -> null
+      - read_only                                   = false -> null
+      - remove_volumes                              = true -> null
+      - restart                                     = "unless-stopped" -> null
+      - rm                                          = false -> null
+      - runtime                                     = "runc" -> null
+      - security_opts                               = [] -> null
+      - shm_size                                    = 64 -> null
+      - start                                       = true -> null
+      - stdin_open                                  = false -> null
+      - stop_timeout                                = 0 -> null
+      - storage_opts                                = {} -> null
+      - sysctls                                     = {} -> null
+      - tmpfs                                       = {} -> null
+      - tty                                         = false -> null
+      - wait                                        = false -> null
+      - wait_timeout                                = 60 -> null
+      - working_dir                                 = "/" -> null
+        # (7 unchanged attributes hidden)
+
+      - ports {
+          - external = 3306 -> null
+          - internal = 3306 -> null
+          - ip       = "127.0.0.1" -> null
+          - protocol = "tcp" -> null
+        }
+    }
+
+  # docker_image.mysql will be destroyed
+  - resource "docker_image" "mysql" {
+      - id          = "sha256:c36050afdca850f23cef85703f84c7531a5ae155a11b5ee1c60acb09937c4084mysql:8" -> null
+      - image_id    = "sha256:c36050afdca850f23cef85703f84c7531a5ae155a11b5ee1c60acb09937c4084" -> null
+      - name        = "mysql:8" -> null
+      - repo_digest = "mysql@sha256:c36050afdca850f23cef85703f84c7531a5ae155a11b5ee1c60acb09937c4084" -> null
+    }
+
+  # local_file.inventory will be destroyed
+  - resource "local_file" "inventory" {
+      - content              = <<-EOT
+            [servers]
+            vm1 ansible_host=93.77.177.16
+            
+            [servers:vars]
+            ansible_user=yc-user
+            ansible_ssh_private_key_file=~/.ssh/yandex
+        EOT -> null
+      - content_base64sha256 = "r7xXPTzBmysEuq49wmzOmKPJXgkoWjUBCql/5iOEruU=" -> null
+      - content_base64sha512 = "VUELpZcCIYhI6GVZNYIwYbli/rZGQj6PIFyXZ/5UOc+QNuXtsSwtCJkbxqqrVBVxRR8aSiVaQDxbwYxac+n0iQ==" -> null
+      - content_md5          = "bdaf5ba18a2257b9ef1b0ba7e9c8db0c" -> null
+      - content_sha1         = "ad1166e29017685e4261358f4d4f5a597345168a" -> null
+      - content_sha256       = "afbc573d3cc19b2b04baae3dc26cce98a3c95e09285a35010aa97fe62384aee5" -> null
+      - content_sha512       = "55410ba59702218848e8655935823061b962feb646423e8f205c9767fe5439cf9036e5edb12c2d08991bc6aaab541571451f1a4a255a403c5bc18c5a73e9f489" -> null
+      - directory_permission = "0777" -> null
+      - file_permission      = "0777" -> null
+      - filename             = "./hosts.ini" -> null
+      - id                   = "ad1166e29017685e4261358f4d4f5a597345168a" -> null
+    }
+
+  # random_password.mysql_root_password will be destroyed
+  - resource "random_password" "mysql_root_password" {
+      - bcrypt_hash = (sensitive value) -> null
+      - id          = "none" -> null
+      - length      = 20 -> null
+      - lower       = true -> null
+      - min_lower   = 0 -> null
+      - min_numeric = 0 -> null
+      - min_special = 0 -> null
+      - min_upper   = 0 -> null
+      - number      = true -> null
+      - numeric     = true -> null
+      - result      = (sensitive value) -> null
+      - special     = true -> null
+      - upper       = true -> null
+    }
+
+  # random_password.mysql_user_password will be destroyed
+  - resource "random_password" "mysql_user_password" {
+      - bcrypt_hash = (sensitive value) -> null
+      - id          = "none" -> null
+      - length      = 20 -> null
+      - lower       = true -> null
+      - min_lower   = 0 -> null
+      - min_numeric = 0 -> null
+      - min_special = 0 -> null
+      - min_upper   = 0 -> null
+      - number      = true -> null
+      - numeric     = true -> null
+      - result      = (sensitive value) -> null
+      - special     = true -> null
+      - upper       = true -> null
+    }
+
+  # random_string.container_suffix will be destroyed
+  - resource "random_string" "container_suffix" {
+      - id          = "t49aipmz" -> null
+      - length      = 8 -> null
+      - lower       = true -> null
+      - min_lower   = 0 -> null
+      - min_numeric = 0 -> null
+      - min_special = 0 -> null
+      - min_upper   = 0 -> null
+      - number      = true -> null
+      - numeric     = true -> null
+      - result      = "t49aipmz" -> null
+      - special     = false -> null
+      - upper       = false -> null
+    }
+
+  # yandex_compute_instance.server1 will be destroyed
+  - resource "yandex_compute_instance" "server1" {
+      - created_at                = "2026-06-09T17:03:40Z" -> null
+      - folder_id                 = "b1gkmombua08rub1rso2" -> null
+      - fqdn                      = "server1.ru-central1.internal" -> null
+      - hardware_generation       = [
+          - {
+              - generation2_features = []
+              - legacy_features      = [
+                  - {
+                      - pci_topology = "PCI_TOPOLOGY_V2"
+                    },
+                ]
+            },
+        ] -> null
+      - hostname                  = "server1" -> null
+      - id                        = "fhmh20047q7t7bggqs8q" -> null
+      - labels                    = {} -> null
+      - metadata                  = {
+          - "serial-port-enable" = "1"
+          - "user-data"          = <<-EOT
+                #cloud-config
+                # Создаем пользователя для администрирования ВМ
+                users:
+                  - name: yc-user            # Имя пользователя для входа по SSH
+                    groups: sudo                 # Добавляем в группу sudo
+                    shell: /bin/bash             # Стандартная оболочка
+                    sudo: ['ALL=(ALL) NOPASSWD:ALL']  # Разрешаем sudo без пароля
+                    ssh-authorized-keys:
+                      - ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAINP9aqI3i8A0xat8PxArWhSWLW2tbXhyF8ZJ+6QGmk3w kvn@student        # Публичный SSH-ключ подставляется из Terraform переменной
+                
+                # Обновление списка пакетов при первом старте
+                package_update: true
+                
+                # Полный upgrade не обязателен, чтобы не удлинять первый boot
+                package_upgrade: false
+            EOT
+        } -> null
+      - name                      = "server1" -> null
+      - network_acceleration_type = "standard" -> null
+      - platform_id               = "standard-v3" -> null
+      - status                    = "running" -> null
+      - zone                      = "ru-central1-a" -> null
+        # (4 unchanged attributes hidden)
+
+      - boot_disk {
+          - auto_delete = true -> null
+          - device_name = "fhmaphvkilqqr3uib93d" -> null
+          - disk_id     = "fhmaphvkilqqr3uib93d" -> null
+          - mode        = "READ_WRITE" -> null
+
+          - initialize_params {
+              - block_size  = 4096 -> null
+              - image_id    = "fd8hrphlcsmi293sjc74" -> null
+                name        = null
+              - size        = 15 -> null
+              - type        = "network-hdd" -> null
+                # (3 unchanged attributes hidden)
+            }
+        }
+
+      - metadata_options {
+          - aws_v1_http_endpoint = 1 -> null
+          - aws_v1_http_token    = 2 -> null
+          - aws_v2_http_endpoint = 1 -> null
+          - aws_v2_http_token    = 1 -> null
+          - gce_http_endpoint    = 1 -> null
+          - gce_http_token       = 1 -> null
+        }
+
+      - network_interface {
+          - index              = 0 -> null
+          - ip_address         = "10.0.1.16" -> null
+          - ipv4               = true -> null
+          - ipv6               = false -> null
+          - mac_address        = "d0:0d:11:10:00:43" -> null
+          - nat                = true -> null
+          - nat_ip_address     = "93.77.177.16" -> null
+          - nat_ip_version     = "IPV4" -> null
+          - security_group_ids = [
+              - "enp35og1tou89p5bocmu",
+            ] -> null
+          - subnet_id          = "e9beqgo7qg2iekrfbagh" -> null
+            # (1 unchanged attribute hidden)
+        }
+
+      - placement_policy {
+          - host_affinity_rules       = [] -> null
+          - placement_group_partition = 0 -> null
+            # (1 unchanged attribute hidden)
+        }
+
+      - resources {
+          - core_fraction = 20 -> null
+          - cores         = 2 -> null
+          - gpus          = 0 -> null
+          - memory        = 2 -> null
+        }
+
+      - scheduling_policy {
+          - preemptible = true -> null
+        }
+    }
+
+  # yandex_vpc_gateway.nat_gateway will be destroyed
+  - resource "yandex_vpc_gateway" "nat_gateway" {
+      - created_at  = "2026-06-09T17:03:34Z" -> null
+      - folder_id   = "b1gkmombua08rub1rso2" -> null
+      - id          = "enpkq17otonodkvj6j37" -> null
+      - labels      = {} -> null
+      - name        = "fops-gateway-kvn" -> null
+        # (1 unchanged attribute hidden)
+
+      - shared_egress_gateway {}
+    }
+
+  # yandex_vpc_network.develop will be destroyed
+  - resource "yandex_vpc_network" "develop" {
+      - created_at                = "2026-06-09T17:03:34Z" -> null
+      - default_security_group_id = "enpll4egge5lkcieii7f" -> null
+      - folder_id                 = "b1gkmombua08rub1rso2" -> null
+      - id                        = "enp8rvmtg5dq0su05pip" -> null
+      - labels                    = {} -> null
+      - name                      = "develop-fops-kvn" -> null
+      - subnet_ids                = [
+          - "e9beqgo7qg2iekrfbagh",
+        ] -> null
+        # (1 unchanged attribute hidden)
+    }
+
+  # yandex_vpc_route_table.rt will be destroyed
+  - resource "yandex_vpc_route_table" "rt" {
+      - created_at  = "2026-06-09T17:03:36Z" -> null
+      - folder_id   = "b1gkmombua08rub1rso2" -> null
+      - id          = "enpuma37vb437i0sm2eu" -> null
+      - labels      = {} -> null
+      - name        = "fops-route-table-kvn" -> null
+      - network_id  = "enp8rvmtg5dq0su05pip" -> null
+        # (1 unchanged attribute hidden)
+
+      - static_route {
+          - destination_prefix = "0.0.0.0/0" -> null
+          - gateway_id         = "enpkq17otonodkvj6j37" -> null
+            # (1 unchanged attribute hidden)
+        }
+    }
+
+  # yandex_vpc_security_group.ha_cluster will be destroyed
+  - resource "yandex_vpc_security_group" "ha_cluster" {
+      - created_at  = "2026-06-09T17:03:37Z" -> null
+      - folder_id   = "b1gkmombua08rub1rso2" -> null
+      - id          = "enp35og1tou89p5bocmu" -> null
+      - labels      = {} -> null
+      - name        = "ha-cluster-kvn" -> null
+      - network_id  = "enp8rvmtg5dq0su05pip" -> null
+      - status      = "ACTIVE" -> null
+        # (1 unchanged attribute hidden)
+
+      - egress {
+          - description       = "ANY outbound" -> null
+          - from_port         = -1 -> null
+          - id                = "enp7tecomj282s561rlm" -> null
+          - labels            = {} -> null
+          - port              = -1 -> null
+          - protocol          = "ANY" -> null
+          - to_port           = -1 -> null
+          - v4_cidr_blocks    = [
+              - "0.0.0.0/0",
+            ] -> null
+          - v6_cidr_blocks    = [] -> null
+            # (2 unchanged attributes hidden)
+        }
+
+      - ingress {
+          - description       = "SSH" -> null
+          - from_port         = -1 -> null
+          - id                = "enp6bl315pu6drueucmj" -> null
+          - labels            = {} -> null
+          - port              = 22 -> null
+          - protocol          = "TCP" -> null
+          - to_port           = -1 -> null
+          - v4_cidr_blocks    = [
+              - "0.0.0.0/0",
+            ] -> null
+          - v6_cidr_blocks    = [] -> null
+            # (2 unchanged attributes hidden)
+        }
+    }
+
+  # yandex_vpc_subnet.develop_a will be destroyed
+  - resource "yandex_vpc_subnet" "develop_a" {
+      - created_at     = "2026-06-09T17:03:37Z" -> null
+      - folder_id      = "b1gkmombua08rub1rso2" -> null
+      - id             = "e9beqgo7qg2iekrfbagh" -> null
+      - labels         = {} -> null
+      - name           = "develop-fops-kvn-ru-central1-a" -> null
+      - network_id     = "enp8rvmtg5dq0su05pip" -> null
+      - route_table_id = "enpuma37vb437i0sm2eu" -> null
+      - v4_cidr_blocks = [
+          - "10.0.1.0/24",
+        ] -> null
+      - v6_cidr_blocks = [] -> null
+      - zone           = "ru-central1-a" -> null
+        # (1 unchanged attribute hidden)
+    }
+
+Plan: 0 to add, 0 to change, 12 to destroy.
+
+Changes to Outputs:
+  - external_ip          = "93.77.177.16" -> null
+  - mysql_container_name = (sensitive value) -> null
+  - mysql_root_password  = (sensitive value) -> null
+  - mysql_user_password  = (sensitive value) -> null
+  - security_group_id    = "enp35og1tou89p5bocmu" -> null
+  - subnet_a             = "e9beqgo7qg2iekrfbagh" -> null
+
+Do you really want to destroy all resources?
+  Terraform will destroy all your managed infrastructure, as shown above.
+  There is no undo. Only 'yes' will be accepted to confirm.
+
+  Enter a value: yes
+
+local_file.inventory: Destroying... [id=ad1166e29017685e4261358f4d4f5a597345168a]
+local_file.inventory: Destruction complete after 0s
+docker_container.mysql: Destroying... [id=1a03969b03a57b7ff0b8107c293afa66d017deb434fb005eb700919aa66d8087]
+docker_container.mysql: Destruction complete after 5s
+docker_image.mysql: Destroying... [id=sha256:c36050afdca850f23cef85703f84c7531a5ae155a11b5ee1c60acb09937c4084mysql:8]
+random_string.container_suffix: Destroying... [id=t49aipmz]
+random_password.mysql_root_password: Destroying... [id=none]
+random_password.mysql_user_password: Destroying... [id=none]
+random_password.mysql_root_password: Destruction complete after 0s
+random_string.container_suffix: Destruction complete after 0s
+random_password.mysql_user_password: Destruction complete after 0s
+docker_image.mysql: Destruction complete after 1s
+yandex_compute_instance.server1: Destroying... [id=fhmh20047q7t7bggqs8q]
+yandex_compute_instance.server1: Still destroying... [id=fhmh20047q7t7bggqs8q, 00m10s elapsed]
+yandex_compute_instance.server1: Still destroying... [id=fhmh20047q7t7bggqs8q, 00m20s elapsed]
+yandex_compute_instance.server1: Still destroying... [id=fhmh20047q7t7bggqs8q, 00m30s elapsed]
+yandex_compute_instance.server1: Destruction complete after 35s
+yandex_vpc_subnet.develop_a: Destroying... [id=e9beqgo7qg2iekrfbagh]
+yandex_vpc_security_group.ha_cluster: Destroying... [id=enp35og1tou89p5bocmu]
+yandex_vpc_security_group.ha_cluster: Destruction complete after 1s
+yandex_vpc_subnet.develop_a: Destruction complete after 6s
+yandex_vpc_route_table.rt: Destroying... [id=enpuma37vb437i0sm2eu]
+yandex_vpc_route_table.rt: Destruction complete after 1s
+yandex_vpc_gateway.nat_gateway: Destroying... [id=enpkq17otonodkvj6j37]
+yandex_vpc_network.develop: Destroying... [id=enp8rvmtg5dq0su05pip]
+yandex_vpc_gateway.nat_gateway: Destruction complete after 0s
+yandex_vpc_network.develop: Destruction complete after 0s
+
+Destroy complete! Resources: 12 destroyed.
+kvn@student2:~/netology/terraform1/terraform$ 

@@ -1,0 +1,84 @@
+#playbook1.yml
+
+---
+- name: Install Docker and deploy project
+  hosts: servers                  #Группа хостов из inventory (раздел [servers] в hosts.ini)
+  become: true                    #Выполнять задачи с привилегиями root (sudo).
+  gather_facts: false             #Сначала ждем ssh потом собираем факты о системе (ansible_facts)
+
+  vars:
+    repo_url: "https://github.com/x-optima/virt4.git"    #URL Git-репозитория, который нужно клонировать на сервер
+    repo_dest: "/opt/virt4"                               #Каталог на сервере, куда будет клонирован репозиторий
+
+  pre_tasks:
+    #задачи, которые выполняются до основного списка tasks
+
+    - name: Wait for SSH               #Ждем, пока SSH-сервис станет доступен
+      ansible.builtin.wait_for:        #Модуль wait_for — ждет открытие порта/сокета
+        host: "{{ ansible_host | default(inventory_hostname) }}" # Используем ansible_host из inventory, либо имя узла, если переменная не задана
+        port: 22                      #Ждем доступности порта 22 (SSH)
+        delay: 5                      #Ждем 5 секунд перед первой проверкой
+        timeout: 300                  #Общий таймаут ожидания 300 секунд
+        state: started                #Ждем, пока порт перейдет в состояние "started" (открыт и слушает)
+    
+    - name: Gather facts              #Cобираем факты о системе (ansible_facts)
+      ansible.builtin.setup:
+
+  tasks:
+    - name: Install base packages       #Установка базовых пакетов, необходимых для Docker и Git
+      ansible.builtin.apt:              #Модуль apt — управление пакетами в Debian/Ubuntu.
+        name:
+          - ca-certificates             #Пакет с корневыми сертификатами для HTTPS
+          - curl                        #curl для отладки и загрузки файлов
+          - gnupg                       #GnuPG, нужен для работы с GPG-ключами репозиториев
+          - lsb-release                 #Пакет lsb-release, предоставляет информацию о дистрибутиве
+          - git                         #Git, нужен для клонирования репозитория на сервере
+        state: present                  #Все пакеты должны быть установлены
+        update_cache: true              #Перед установкой обновляем кэш списков пакетов
+
+    - name: Create apt keyrings directory      #Создаем каталог под keyring'и apt
+      ansible.builtin.file:                    #Модуль file — управление файлами и каталогами
+        path: /etc/apt/keyrings                #Путь к каталогу для хранения GPG-ключей репозиториев
+        state: directory                       #Объект должен быть каталогом
+        mode: "0755"                           #Права доступа к каталогу
+
+    - name: Download Docker GPG key            #Скачиваем официальный GPG-ключ Docker
+      ansible.builtin.get_url:                 #Модуль get_url — скачивание файла по HTTP/HTTPS
+        url: "https://download.docker.com/linux/ubuntu/gpg"     #URL GPG-ключа Docker для Ubuntu
+        dest: /etc/apt/keyrings/docker.asc                      #Путь, куда сохранить GPG-ключ
+        mode: "0644"                                            # Права доступа к файлу
+
+    - name: Add Docker repository                #Добавляем официальный репозиторий Docker
+      ansible.builtin.apt_repository:            #Модуль apt_repository — добавление/удаление записей репозиториев
+        repo: "deb [arch=amd64 signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu {{ ansible_distribution_release }} stable"
+        # Строка репозитория в формате APT:
+        # - arch=amd64 — архитектура;
+        # - signed-by=... — ранее сохраненный GPG-ключ;
+        # - URL репозитория Docker;
+        # - {{ ansible_distribution_release }} — кодовое имя релиза Ubuntu;
+        # - stable — ветка репозитория.
+        state: present                            #Убеждаемся, что репозиторий присутствует
+        filename: docker                          #Имя файла в /etc/apt/sources.list.d (docker.list)
+
+    - name: Install Docker packages               #Имя задачи: устанавливаем Docker Engine и связанные компоненты
+      ansible.builtin.apt:
+        name:
+          - docker-ce                             #Основной пакет Docker Engine
+          - docker-ce-cli                         #CLI-клиент Docker.
+          - containerd.io                         #containerd - runtime докера
+          - docker-buildx-plugin                  #Плагин Docker Buildx для расширенной сборки
+          - docker-compose-plugin                 #Плагин Docker Compose 
+        state: present                            #Все пакеты должны быть установлены
+        update_cache: true                        #Обновляем кэш пакетов на случай, если репозиторий только что добавлен
+
+    - name: Add yc-user to docker group           #Имя задачи: добавляем пользователя yc-user в группу docker
+      ansible.builtin.user:                       #Модуль user — управление пользователями
+        name: yc-user                             #Имя пользователя для изменения
+        groups: docker                            #Целевая группа, в которую нужно добавить пользователя
+        append: true                              #Не заменять список групп, а добавить указанную
+
+    - name: Enable Docker service                 #Включаем и запускаем сервис Docker
+      ansible.builtin.systemd:                    #Модуль systemd — управление сервисами systemd
+        name: docker                              #Имя unit'а 
+        enabled: true                             #Включаем автозапуск при загрузке
+        state: started                            #Убеждаемся, что сервис сейчас запущен

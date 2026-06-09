@@ -56,15 +56,15 @@
 8) Создаем новый контейнер командой ***terraform apply -auto-approve***.  Флаг ***-auto-approve*** у команды ***terraform apply*** отключает интерактивное подтверждение перед применением плана и сразу выполняет все изменения, которые Terraform вычислил. Можно случайно уничтожить или изменить критичные ресурсы (БД, прод-кластеры, сетевую инфраструктуру), потому что Terraform не покажет план для подтверждения. Ошибка в коде будет сразу применена, что может привести к потере данных.  
 9) Удаляем данные командой ***terraform destroy -auto-approve*** .  
 10) Не был удалён docker-образ nginx:latest потому что в клоде есть аргумент ***keep_locally = true***. Этот флаг отвечает за то, будет ли провайдер пытаться удалять образ из локального Docker при уничтожении ресурса. В нашем случае terraform должен оставить образ nginx:latest локально даже после ***terraform destroy***.   
-
+11) В файле ***main.tf*** закомментируем код и сохраним под именем ***main_dz1.tf***.  
 
 
 Файлы.    
-<a href="./terraform/main.tf" target="_blank"> terraform.main </a>  
+<a href="./terraform/main_dz1.tf" target="_blank"> main_dz1.tf </a>  
 
 
 Скриншоты.  
-
+f
 ![Задание 1. Скриншот 1](screenshots/scr1_1.png)  
 ![Задание 1. Скриншот 2](screenshots/scr1_2.png)  
 ![Задание 1. Скриншот 3](screenshots/scr1_3.png)  
@@ -108,15 +108,21 @@
 <span style="color:black">
 
 
-1) 
-2)
+1) Создаем файлы main.tf, cloud-init.yml.tpl, networks.tf, playbook.yml, variables.tf, deploy.sh   
+2) Развернем ВМ в yandex cloud и установим на нее БД при помощи terraform и ansible. Для этого описываем файлы terraform и плейбук, который установит docker на ВМ.     
+3) Запускаем в скрипте deploy.sh c проверкой на доступность порта 22.  
+4) Развёртывание упешно. Файл лога <a href="./deploy.log" target="_blank"> deploy.log </a>  
+5) Проверим работу. Подключимся по SSH, выведем список контейнеров, просмотрим командой docker exec переменные окруженя внутри конейнера.  ***terraform destroy***.  
 
 Файлы.    
-<a href="./Dockerfile.python" target="_blank"> Dockerfile.python </a>  
-<a href="./.dockerignore" target="_blank"> .dockerignore </a>  
+<a href="./terraform/main.tf" target="_blank"> main.tf </a>  
+<a href="./terraform/network.tf" target="_blank"> network.tf </a>  
+<a href="./terraform/providers.tf" target="_blank"> providers.tf </a>  
 <a href="./.gitignore" target="_blank"> .gitignore </a>  
-<a href="./compose.yaml" target="_blank"> compose.yaml </a>  
-<a href="./script.sh" target="_blank"> script.sh </a>  
+<a href="./terraform/cloud-init.yml.tpl" target="_blank"> cloud-init.yml.tpl </a>  
+<a href="./personal.auto.tfvars" target="_blank"> personal.auto.tfvars </a>
+<a href="./terraform/variables.tf" target="_blank"> variables.tf </a>  
+<a href="./deploy.sh" target="_blank"> deploy.sh </a>
 
 Скриншоты.  
 
@@ -124,7 +130,7 @@
 ![Задание 2. Скриншот 2](screenshots/scr2_2.png)  
 ![Задание 2. Скриншот 3](screenshots/scr2_3.png)  
 ![Задание 2. Скриншот 4](screenshots/scr2_4.png)  
-
+![Задание 2. Скриншот 5](screenshots/scr2_5.png)  
 
 
 ### Задание 3*
