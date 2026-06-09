@@ -142,38 +142,19 @@ f
 ## Ответ  
 <span style="color:black">
 
-1) 
-2)
+1) Установим ***opentofu***.   
+2) Перепишем скрипт запуска ***deploy_opentofu.sh*** с заменой команды ***terraform*** на ***tofu***.  
+3) Запускаем. Видим, что команда tofu init запускается, но при попытке использовать те же провайдеры (yandex-cloud/yandex и kreuzwerker/docker) OpenTofu переписывает lock‑файл на registry.opentofu.org, но не может скачать провайдеры (403 Forbidden), поэтому выполнить tofu apply с этой конфигурацией нельзя.  
+4) Можно настроить providers в tofu.rc/.terraformrc и принудительно указать OpenTofu использовать зеркала Terraform Registry, а не свой или использовать провайдеры, которые опубликованы в registry.opentofu.org.  
 
-
+  
 Файлы.    
-<a href="./Dockerfile.python" target="_blank"> Dockerfile.python </a>  
-<a href="./.dockerignore" target="_blank"> .dockerignore </a>  
-<a href="./.gitignore" target="_blank"> .gitignore </a>  
-<a href="./compose.yaml" target="_blank"> compose.yaml </a>  
-<a href="./script.sh" target="_blank"> script.sh </a>  
+<a href="./deploy_opentofu.sh" target="_blank"> deploy_opentofu.sh </a>  
+<a href="./deploy_opentofu.log" target="_blank"> deploy_opentofu.log </a>   
 
 
 Скриншоты.  
 
 ![Задание 3. Скриншот 1](screenshots/scr3_1.png)  
-![Задание 3. Скриншот 2(screenshots/scr3_2.png)  
-![Задание 3. Скриншот 3(screenshots/scr3_3.png)  
-![Задание 3. Скриншот 4(screenshots/scr3_4.png)  
-
-  
-Файлы.    
-<a href="./Dockerfile.python" target="_blank"> Dockerfile.python </a>  
-<a href="./.dockerignore" target="_blank"> .dockerignore </a>  
-<a href="./.gitignore" target="_blank"> .gitignore </a>  
-<a href="./compose.yaml" target="_blank"> compose.yaml </a>  
-<a href="./script.sh" target="_blank"> script.sh </a>  
-
-Скриншоты.  
-
-![Задание 1. Скриншот 1](screenshots/scr1_1.png)  
-![Задание 1. Скриншот 2](screenshots/scr1_2.png)  
-![Задание 1. Скриншот 3](screenshots/scr1_3.png)  
-![Задание 1. Скриншот 4](screenshots/scr1_4.png)  
-
+![Задание 3. Скриншот 2](screenshots/scr3_2.png)  
 

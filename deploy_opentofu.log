@@ -1,0 +1,49 @@
+kvn@student2:~/netology/terraform1$ ./deploy_opentofu.sh
+
+Initializing the backend...
+
+Initializing provider plugins...
+- Reusing previous version of hashicorp/random from the dependency lock file
+- Reusing previous version of hashicorp/local from the dependency lock file
+- Finding kreuzwerker/docker versions matching "~> 3.0"...
+- Finding yandex-cloud/yandex versions matching "~> 0.140"...
+╷
+│ Warning: Dependency lock file entries automatically updated
+│ 
+│ OpenTofu automatically rewrote some entries in your dependency lock file:
+│   - registry.terraform.io/hashicorp/local => registry.opentofu.org/hashicorp/local
+│   - registry.terraform.io/hashicorp/random => registry.opentofu.org/hashicorp/random
+│ 
+│ The version selections were preserved, but the hashes were not because the OpenTofu project's provider releases are not byte-for-byte
+│ identical.
+╵
+
+╷
+│ Error: Failed to resolve provider packages
+│ 
+│ Could not resolve provider yandex-cloud/yandex: could not connect to registry.opentofu.org: failed to request discovery document: 403
+│ Forbidden
+╵
+
+╷
+│ Error: Failed to resolve provider packages
+│ 
+│ Could not resolve provider kreuzwerker/docker: could not connect to registry.opentofu.org: failed to request discovery document: 403
+│ Forbidden
+╵
+
+╷
+│ Error: Failed to resolve provider packages
+│ 
+│ Could not resolve provider hashicorp/local: could not connect to registry.opentofu.org: failed to request discovery document: 403
+│ Forbidden
+╵
+
+╷
+│ Error: Failed to resolve provider packages
+│ 
+│ Could not resolve provider hashicorp/random: could not connect to registry.opentofu.org: failed to request discovery document: 403
+│ Forbidden
+╵
+
+kvn@student2:~/netology/terraform1$ 
